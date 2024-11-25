@@ -30,9 +30,11 @@ def newEvent():
     competitors.append(Competitor(competitorName))
     
     while competitorName != "":
+        counter += 1
         competitorName = input(f"Name competitor {counter}: ")
         if competitorName != "":
             competitors.append(Competitor(competitorName))
+            
     
     e = Event(name, competitors)
     doEvent(e)
@@ -48,7 +50,47 @@ def loadFromFile():
     doEvent(e)
 
 def doEvent(event : Event):
-    pass
+    event.sortCompetitorsByRank()
+    print(f"--- Event : {event.name} --- Top ---")
+    for i in range(len(event.competitors)):
+        print(f"{i+1}: {str(event.competitors[i])}")
+    
+    print("--- actions ---")
+    print("1) Start battles")
+    print("2) save & home")
 
-def doBattle(battle : Event):
-    pass
+    ans = input("> ")
+
+    match ans:
+        case "1":
+            startbattles(event)
+        case "2":
+            fileName = input("Filename: ")
+            event.saveToFile(fileName)
+            home()
+
+def startbattles(e : Event):
+    e.startRound()
+    for b in e.battles:
+        doBattle(b)
+    
+    e.endRound()
+    doEvent(e)
+
+
+def doBattle(battle : Battle):
+    print(f"--- {battle} ---")
+
+    while not battle.hasWinner():
+        time = input(f"Round {battle.round} {battle.getCurrentCompetitor().name}: ")
+        
+        if time == "":
+            time = -1
+        
+        battle.playTurn(float(time))
+    
+    print(f"Winner is {battle.getWinner().name}")
+    # --> startbattles
+
+
+home()

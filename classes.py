@@ -26,8 +26,13 @@ class Competitor():
         # tostring
         # make the s dissapear if there is only one win
         s = ["s", ""][int(self.wins == 1)]
+        
+        # check if mean is DNF and set it to the word if it is
+        mean = round(self.getMean(),2)
+        if mean == DNF:
+            mean = "DNF"
         # return a readable string with valuable information for humans
-        return f"Competitor {self.name} with {self.wins} win{s} and a mean of {round(self.getMean(),2)}"
+        return f"Competitor {self.name} with {self.wins} win{s} and a mean of {mean}"
     
     def __repr__(self):
         return f"Competitor(name={self.name}, wins={self.wins}, solves={self.solves}, competed={self.competed})"
@@ -370,8 +375,9 @@ class Event():
         # if not every battle has ended throw exception, unless forced:
         if (not all([b.hasWinner() for b in self.battles])) and (not forced):
             raise Exception("The round is still ongoing")
-        # clear out the battles
+        # clear out the battles & matchups
         self.battles = []
+        self.matchups = []
         # continue to next round
         self.round += 1
     
@@ -383,7 +389,7 @@ e = Event(file="example.event")
 
 print(e.name, e.round, e.competitors)
 e.saveToFile("alex.event")"""
-
+"""
 c1 = Competitor("Click")
 c2 = Competitor("Alex")
 c3 = Competitor("Jaice")
@@ -403,3 +409,4 @@ print([str(i) for i in e.battles], e.battles[0].hasWinner())
 
 e.endRound(forced=True)
 print([str(i) for i in e.battles])
+"""
