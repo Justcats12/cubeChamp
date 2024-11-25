@@ -338,11 +338,13 @@ class Event():
                 taken += [c1.name, c2.name]
                 break
 
-    def startRound(self, doMatchups = True):
+    def startRound(self, doMatchups = True, scoreToWin=3):
         """
         Creates matchups and creates a new battle for every matchup that is stored in the battles list
         
         You can set doMatchups to False to not do the matchups, so you can do them yourself and alter them if you need to.
+
+        The score to win is 3 by default but can be altered by setting scoreToWin
         """
         # check if previous round has ended
         if len(self.battles) > 0:
@@ -353,7 +355,7 @@ class Event():
 
         # make a battle for every matchup
         for m in self.matchups:
-            self.battles.append(Battle(m))
+            self.battles.append(Battle(m, scoreToWin=scoreToWin))
     
     def endRound(self, forced = False):
         """
