@@ -122,8 +122,11 @@ class Battle():
         # add competitors to eachother's competing list
         for c in competitors:
             c.addCompeted(competitors)
+    def __str__(self):
+        return f"Battle between {" and ".join([c.name for c in self.competitors])}"
+    def __repr__(self):
+        return f"Battle(competitors={self.competitors}, scores={self.scores}, scoreToWin={self.scoreToWin}, round={self.round})"
 
-    
     def nextRound(self):
         """End the current round and go the next"""
         # determine winner
@@ -195,7 +198,7 @@ class Event():
         
         # if not loaded from file the name and competitors
         self.name = name
-        self.competitors :  list[Competitor] = competitors
+        self.competitors :  list[Competitor] = competitors.copy()
         # add LOC if odd amount of competitors
         if len(self.competitors)%2 != 0:
             self.competitors.append(LOC)
@@ -204,6 +207,7 @@ class Event():
 
         # list used for matchups
         self.matchups = []
+        self.battles : list[Battle]= []
 
         # if file was given load from file instead
         if file != None:
@@ -328,8 +332,20 @@ class Event():
                 taken += [c1.name, c2.name]
                 break
 
-        pass
-
+    def startRound(self):
+        # check if previous round has ended
+        if len(self.battles) > 0:
+            raise Exception("Previous round hasn't ended")
+        # make a battle for every matchup
+        for m in self.matchups:
+            self.battles.append(Battle(m))
+    
+    def endRound(self, forced = False):
+        # if not every battle has ended throw exception, unless forced:
+        if (not all([b.hasWinner() for b in self.battles])) and (not forced):
+            raise Exception("The round is still ongoing")
+        
+        self.battles = []
     
 
 # TESTCODE
@@ -352,6 +368,9 @@ c3.addsolve(15)
 e = Event("3x3", [c2, c3, c1])
 
 e.createMatchups()
+e.startRound()
 
-print(e.matchups)
+print([str(i) for i in e.battles], e.battles[0].hasWinner())
 
+e.endRound(forced=True)
+print([str(i) for i in e.battles])
