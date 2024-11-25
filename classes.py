@@ -3,15 +3,15 @@
 
 # Author: justcats12
 
-#
-# VARIABLES
-#
+#############
+# VARIABLES #
+#############
 
 DNF = -1
 
-#
-# Competitor class
-#
+####################
+# Competitor class #
+####################
 
 class Competitor():
     def __init__(self, name : str, solves = set(), competed = set()):
@@ -99,9 +99,10 @@ They do a DNF every turn automatically.
 The competitor who plays against LOC is allowed 3 solves to improve/set their mean
 """
     
-#
-# Battle class
-#
+################
+# Battle class #
+################
+
 class Battle():
     def __init__(self, competitors : list[Competitor], scoreToWin = 3):
 
@@ -185,9 +186,9 @@ class Battle():
         
 
     
-#
-# Event class
-#
+###############
+# Event class #
+###############
 
 class Event():
     def __init__(self, name : str = "",competitors : list[Competitor] = [], file : str = None):
