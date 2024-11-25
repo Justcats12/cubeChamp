@@ -56,6 +56,10 @@ class Competitor():
         # compare function
         if self.wins != other.wins:
             return self.wins < other.wins
+        # always less then when average is DNF
+        if self.getMean() == DNF:
+            return True
+        # else compare mean
         return self.getMean() > other.getMean()
     
     def addsolve(self, time: float):
