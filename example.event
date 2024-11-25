@@ -1,7 +1,7 @@
 NAME=3x3
 ROUND=3
 COMPETITORS
-Tymon:3.0 4.12 5.12 4.25 5.01 3.99 5.0 4.14:Max Matty
-Matty:3.11 4.5 5.14 4.0 5.1 3.03 4.15:Yiheng Tymon
-Max:3.13 4.75 5.16 5.0 6.01 8.1 4.12 3.96:Yiheng Tymon
-Yiheng:3.15 3.12 4.51 5.12 4.15 6.15 5.13:Max Matty
+Tymon:3.0 4.25 4.12 5.12 5.01 3.99 5.0 4.14:Max Matty:2
+Matty:3.11 4.0 4.5 5.14 5.1 3.03 4.15:Yiheng Tymon:1
+Yiheng:3.12 3.15 4.51 5.12 4.15 6.15 5.13:Max Matty:1
+Max:3.13 4.75 5.0 5.16 6.01 8.1 4.12 3.96:Yiheng Tymon:0

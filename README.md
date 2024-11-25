@@ -1,6 +1,6 @@
 # cubeChamp
 
-VERSION: 0.2
+VERSION: 0.3
 
 ### THIS IS A WORK IN PROGRES, it remains unfinished
 

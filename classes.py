@@ -14,11 +14,11 @@ DNF = -1
 ####################
 
 class Competitor():
-    def __init__(self, name : str, solves = set(), competed = set()):
+    def __init__(self, name : str, solves = set(), competed = set(), wins = 0):
         # initate class with name, no solves and no wins
         self.name : str = name
         self.solves : set = solves.copy()
-        self.wins : int = 0
+        self.wins : int = wins
         # set to check who competitor already competed with
         self.competed : set = competed.copy()
     
@@ -257,8 +257,10 @@ class Event():
                 compCompeted = splits[2].split(" ")
             else:
                 compCompeted = []
+            
+            wins = int(splits[3])
             # add them to the list
-            self.competitors.append(Competitor(compName, solves=solves))
+            self.competitors.append(Competitor(compName, solves=solves, competed=compCompeted, wins=wins))
 
     def saveToFile(self, fileName : str):
         """Save the event to the given filename"""
@@ -277,7 +279,7 @@ class Event():
             solvesAsString = " ".join([str(i) for i in c.solves])
             competedAsString= " ".join([str(i) for i in c.competed])
             # add the name and solves to the list (to write to the file)
-            lines.append(f"{c.name}:{solvesAsString}:{competedAsString}")
+            lines.append(f"{c.name}:{solvesAsString}:{competedAsString}:{c.wins}")
 
         # add newlines to each line
         lines = [i + "\n" for i in lines]
