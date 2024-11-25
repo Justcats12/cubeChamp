@@ -280,13 +280,18 @@ class Event():
     # Matchmaking
     #
     def sortCompetitorsByRank(self):
-        """Sort competitors by how good they are"""
+        """Sort competitors by how good they are, first by amount of wins (more wins = better) and then by their mean (lower mean = better)"""
         # best person will be first in the list
         self.competitors.sort(reverse=True)
     
-    def createMatchups(self):
+    def createMatchups(self, sortFirst = True):
+        """Create match ups based on the order of the competitors list
+        
+        Sorts the competitors by their wins and mean unless sortFirst is set to False"""
+        if sortFirst:
+
         # sort competitors
-        self.sortCompetitorsByRank()
+            self.sortCompetitorsByRank()
         # set to see who's already been matched up
         taken = []
         # go over competitors from the start
@@ -317,6 +322,7 @@ class Event():
         
         # if not everyone has found a competitor repeat the process for everyone who isn't competing yet and match them up with the next unconditionally
         for i in range(len(self.competitors)):
+            
             c1 = self.competitors[i]
             # check if competitor is matched up already, if so continue
             if c1.name in taken:
@@ -332,20 +338,37 @@ class Event():
                 taken += [c1.name, c2.name]
                 break
 
-    def startRound(self):
+    def startRound(self, doMatchups = True):
+        """
+        Creates matchups and creates a new battle for every matchup that is stored in the battles list
+        
+        You can set doMatchups to False to not do the matchups, so you can do them yourself and alter them if you need to.
+        """
         # check if previous round has ended
         if len(self.battles) > 0:
             raise Exception("Previous round hasn't ended")
+        
+        if doMatchups:
+            self.createMatchups()
+
         # make a battle for every matchup
         for m in self.matchups:
             self.battles.append(Battle(m))
     
     def endRound(self, forced = False):
+        """
+        Checks if all battles have a winner and clears out the battle list
+
+        You can override the check for winners by setting forced to True
+        """
         # if not every battle has ended throw exception, unless forced:
         if (not all([b.hasWinner() for b in self.battles])) and (not forced):
             raise Exception("The round is still ongoing")
-        
+        # clear out the battles
         self.battles = []
+        # continue to next round
+        self.round += 1
+    
     
 
 # TESTCODE
