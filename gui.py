@@ -198,7 +198,7 @@ def eventHomeScreen(event : Event):
     enterFileName.insert(0, f"events/{event.name}.event")
     saveandQuitButton = tk.Button(eventHome, text='Save and go home', width=25, command=saveAndQuit)
 
-    quitAndDiscardButton = tk.Button(eventHome, text='Quit and discard', width=25, command=root.destroy)
+    homeAndDiscardButton = tk.Button(eventHome, text='Go home and discard', width=25, command= lambda : eventHome.destroy() or homeScreen().pack())
 
     # pack elements
     eventHomeLabel.pack()
@@ -215,7 +215,7 @@ def eventHomeScreen(event : Event):
     fileNameLabel.pack()
     enterFileName.pack()
     saveandQuitButton.pack()
-    quitAndDiscardButton.pack()
+    homeAndDiscardButton.pack()
 
     return eventHome
 
