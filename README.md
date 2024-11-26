@@ -1,8 +1,8 @@
 # cubeChamp
 
-VERSION: 0.3
+VERSION: ALPHA 1.0
 
-### THIS IS A WORK IN PROGRES, it remains unfinished
+(THIS IS A WORK IN PROGRES, it remains unfinished)
 
 ## Information
 cubeChamp is a matchup tool for a new format for cubing competitions, putting cubers head to head based on their amount of wins and overall mean.
@@ -22,5 +22,29 @@ cubeChamp does not have an internal scramble generator, to generate scramlbes fo
 3. **cui.py**: the comand user interface
 4. **gui.py**: the graphical user interface
 
+## Requirements:
 
+- Python 3.12.7+
+- tkinter (for gui)
+## usage
 
+Clone the repository and move into it
+```
+git clone https://github.com/Justcats12/cubeChamp
+cd cubeChamp
+```
+
+### GUI
+Run the gui file using python
+
+```
+python3 gui.py
+```
+
+### CUI
+Run the cui file using python, it does not require tkinter
+```
+python3 cui.py
+```
+
+When you get a `> ` prompt, fill in the number corresponding to the option you want to do.
