@@ -184,7 +184,7 @@ def eventHomeScreen(event : Event):
     listFrame = tk.Frame(eventHome)
     scrollbar = tk.Scrollbar(listFrame)
     
-    competitorList = tk.Listbox(listFrame, yscrollcommand=scrollbar.set)
+    competitorList = tk.Listbox(listFrame, yscrollcommand=scrollbar.set, width=60)
 
     for i in range(len(event.competitors)):
         cCompetitor = event.competitors[i]
