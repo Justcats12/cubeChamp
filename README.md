@@ -13,6 +13,8 @@ It can also be used for 1v1v1s or 1v1v1v1s and so on, though the matchmaker does
 
 cubeChamp does not have an internal scramble generator, to generate scramlbes for best of 5 or best of 3 it is recommended to use tNoodle.
 
+The gui and cui currently only support best of 5, 1v1 battles.
+
 ## File descriptions
 1. **classes.py**: this is the workings of the system. It consists of 3 main classes
     1. Competitor: Stores the solves of a single competitor, as well as who they have battled against
@@ -47,4 +49,4 @@ Run the cui file using python, it does not require tkinter
 python3 cui.py
 ```
 
-When you get a `> ` prompt, fill in the number corresponding to the option you want to do.
+When you get a `> `-prompt, fill in the number corresponding to the option you want to do.
