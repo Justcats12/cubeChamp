@@ -251,7 +251,7 @@ class Event():
             if splits[1] != "":
                 solves = set([float(i) for i in splits[1].split(" ")])
             else:
-                solves = []
+                solves = set()
 
             if splits[2] != "":
                 compCompeted = set(splits[2].split("%%"))
