@@ -254,7 +254,7 @@ class Event():
                 solves = []
 
             if splits[2] != "":
-                compCompeted = set(splits[2].split(" "))
+                compCompeted = set(splits[2].split("%%"))
             else:
                 compCompeted = set()
             
@@ -277,7 +277,7 @@ class Event():
         for c in self.competitors:
             # get solves as string, seperated by spaces
             solvesAsString = " ".join([str(i) for i in c.solves])
-            competedAsString= " ".join([str(i) for i in c.competed])
+            competedAsString= "%%".join([str(i) for i in c.competed])
             # add the name and solves to the list (to write to the file)
             lines.append(f"{c.name}:{solvesAsString}:{competedAsString}:{c.wins}")
 
