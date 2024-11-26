@@ -4,6 +4,7 @@
 # Author: justcats12
 
 import tkinter as tk
+from classes import Event, Battle, Competitor, DNF
 
 # main window
 root = tk.Tk()
@@ -79,6 +80,12 @@ def competitorEntryScreen(eventName : str, pCompetitors = []):
         competitors = pCompetitors + [nameEntry.get()]
         competitorEntry.destroy()
         competitorEntryScreen(eventName, competitors).pack()
+    
+    def startEvent():
+        competitors =  [Competitor(n) for n in pCompetitors]
+        e = Event(eventName, competitors=competitors)
+        competitorEntry.destroy()
+        eventHomeScreen(e).pack()
 
     # initialize elements
     addCompetitorLabel = tk.Label(competitorEntry,  text=f"Add competitor {len(pCompetitors)+1} for {eventName}", padx=100)
@@ -87,7 +94,7 @@ def competitorEntryScreen(eventName : str, pCompetitors = []):
     nameEntry = tk.Entry(competitorEntry)
 
     addCompetitorButton = tk.Button(competitorEntry, text="Add competitor", width=25, command=addCompetitor)
-    doneButton = tk.Button(competitorEntry, text="Done", width=25)
+    doneButton = tk.Button(competitorEntry, text="Done", width=25, command=startEvent)
 
     listFrame = tk.Frame(competitorEntry)
     scrollbar = tk.Scrollbar(listFrame)
@@ -112,6 +119,48 @@ def competitorEntryScreen(eventName : str, pCompetitors = []):
     scrollbar.config(command=competitorList.yview)
 
     return competitorEntry
+
+def eventHomeScreen(event : Event):
+    eventHome = tk.Frame(root)
+    # sort competitors
+    event.sortCompetitorsByRank()
+    # moving functions
+
+
+    # initialize elements
+    eventHomeLabel = tk.Label(eventHome,  text=f"Event {event.name}", padx=100)
+
+    # ranking
+    rankingLabel = tk.Label(eventHome, text="Current Ranking")
+
+    listFrame = tk.Frame(eventHome)
+    scrollbar = tk.Scrollbar(listFrame)
+    
+    competitorList = tk.Listbox(listFrame, yscrollcommand=scrollbar.set)
+
+    for i in range(len(event.competitors)):
+        cCompetitor = event.competitors[i]
+        competitorList.insert(tk.END, f'{i}) {cCompetitor.name}: {cCompetitor.wins} wins ({cCompetitor.getMean()})')
+
+    # buttons
+    startBattlesButton = tk.Button(eventHome, text='Start battles', width=25)
+
+    saveandQuitButton = tk.Button(eventHome, text='Save and quit', width=25)
+
+    # pack elements
+    eventHomeLabel.pack()
+    
+
+
+    rankingLabel.pack()
+    competitorList.pack(side=tk.LEFT, fill=tk.BOTH)
+    scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+    listFrame.pack()
+
+    startBattlesButton.pack()
+    saveandQuitButton.pack()
+    
+    return eventHome
 
 
 # startup code
