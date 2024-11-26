@@ -275,7 +275,15 @@ def battleFocusScreen(battle : Battle, root=root, updateFunction = None):
 
         battle.playTurn(userInput)
         updateFunction()
+    # if there is a winner
+    if battle.hasWinner():
+        battleWonLabel = tk.Label(battleFocus, text=f"{battle.getWinner().name} won this battle")
 
+        battleWonLabel.pack()
+        return battleFocus
+
+
+    # no winner
     # initialize elements
     battleFocusLabel = tk.Label(battleFocus,  text=f"{str(battle)}", padx=100)
     battleRoundLabel = tk.Label(battleFocus, text=f"Round {battle.round}", pady=10)
@@ -290,6 +298,10 @@ def battleFocusScreen(battle : Battle, root=root, updateFunction = None):
     # submit button, disable if there is a winner
     submitButton = tk.Button(battleFocus, text='Submit time', width=25, state={True: tk.DISABLED, False: tk.NORMAL}[battle.hasWinner()], command=submitTime)
 
+    # previous times:
+    previousTimesString = f"Previous: {', '.join([f'{battle.competitors[i].name}: {battle.solvesThisRound[i]}' for i in range(len(battle.solvesThisRound))])}"
+    previousTimesLabel = tk.Label(battleFocus, text=previousTimesString)
+
     # pack elements
     battleFocusLabel.pack()
     battleRoundLabel.pack()
@@ -297,6 +309,7 @@ def battleFocusScreen(battle : Battle, root=root, updateFunction = None):
     timeInputLabel.pack()
     timeInput.pack()
     submitButton.pack()
+    previousTimesLabel.pack()
 
     
     return battleFocus
