@@ -187,7 +187,7 @@ def eventHomeScreen(event : Event):
     # buttons
     startBattlesButton = tk.Button(eventHome, text='Start battles', width=25, command=startBattles)
 
-    saveandQuitButton = tk.Button(eventHome, text='Save and quit', width=25)
+    saveandQuitButton = tk.Button(eventHome, text='Save and quit', width=25) # TODO: add save function & screen
 
     # pack elements
     eventHomeLabel.pack()
@@ -233,6 +233,11 @@ def battleSummaryScreen(event : Event):
         if all([b.hasWinner() for b in battles]):
             endButton.config(state=tk.NORMAL)
         on_select(None)
+
+    def endBattles():
+        event.endRound()
+        battleSummary.destroy()
+        eventHomeScreen(event=event).pack()
     
     # initialize elements
     battleSummaryLabel = tk.Label(battleSummary,  text=f"Event {event.name} battles", padx=100)
@@ -243,7 +248,7 @@ def battleSummaryScreen(event : Event):
     combo_box.set(battleStrings[0])
 
     # button for ending the battles
-    endButton = tk.Button(battleSummary, text='End battles', width=25, state=tk.DISABLED, pady=10)
+    endButton = tk.Button(battleSummary, text='End battles', width=25, state=tk.DISABLED, pady=10, command=endBattles) 
 
 
     # pack elements

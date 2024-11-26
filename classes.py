@@ -342,7 +342,7 @@ class Event():
             for j in range(i+1, len(self.competitors)):
                 c2 = self.competitors[j]
                 # check if c2 is taken
-                if c2 in taken:
+                if c2.name in taken:
                     continue
                 # if none of the above conditions are true match them up
                 self.matchups.append([c1, c2])
