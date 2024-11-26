@@ -182,7 +182,7 @@ def eventHomeScreen(event : Event):
 
     for i in range(len(event.competitors)):
         cCompetitor = event.competitors[i]
-        competitorList.insert(tk.END, f'{i}) {cCompetitor.name}: {cCompetitor.wins} wins ({round(cCompetitor.getMean(), 2)})')
+        competitorList.insert(tk.END, f'{i+1}) {cCompetitor.name}: {cCompetitor.wins} wins ({round(cCompetitor.getMean(), 2)})')
 
     # buttons
     startBattlesButton = tk.Button(eventHome, text='Start battles', width=25, command=startBattles)
@@ -216,7 +216,7 @@ def battleSummaryScreen(event : Event):
     battleStrings = [str(b) for b in battles]
     
     # battle selecting 
-    selectedBattle = [battleFocusScreen(battles[0], battleSummary)]
+    selectedBattle = [battleFocusScreen(battles[0], battleSummary, lambda : updateFrame())]
     
     def on_select(event):
         selected_item = combo_box.get()
@@ -225,11 +225,14 @@ def battleSummaryScreen(event : Event):
 
         selectedBattle[0].destroy()
         selectedBattle.pop()
-        selectedBattle.append(battleFocusScreen(b, battleSummary))
+        selectedBattle.append(battleFocusScreen(b, battleSummary, lambda : updateFrame()))
         selectedBattle[0].pack()
         
 
-        
+    def updateFrame():
+        if all([b.hasWinner() for b in battles]):
+            endButton.config(state=tk.NORMAL)
+        on_select(None)
     
     # initialize elements
     battleSummaryLabel = tk.Label(battleSummary,  text=f"Event {event.name} battles", padx=100)
@@ -238,13 +241,17 @@ def battleSummaryScreen(event : Event):
     # combo box for selecting battles
     combo_box = ttk.Combobox(battleSummary, values=battleStrings)
     combo_box.set(battleStrings[0])
-    
+
+    # button for ending the battles
+    endButton = tk.Button(battleSummary, text='End battles', width=25, state=tk.DISABLED, pady=10)
 
 
     # pack elements
     battleSummaryLabel.pack()
     combo_box.pack()
+    endButton.pack()
     selectedBattle[0].pack()
+   
 
     # config
     combo_box.bind("<<ComboboxSelected>>", on_select)
@@ -256,20 +263,44 @@ def battleSummaryScreen(event : Event):
 #
 # Battle focus screen
 #
-def battleFocusScreen(battle : Battle, root=root):
+def battleFocusScreen(battle : Battle, root=root, updateFunction = None):
     battleFocus = tk.Frame(root)
 
+    # submit time function
+    def submitTime():
+        userInput = timeInput.get()
+        if userInput.upper() == "DNF":
+            userInput = DNF
+        userInput = float(userInput)
+
+        battle.playTurn(userInput)
+        updateFunction()
+
     # initialize elements
-    battleFocusLabel = tk.Label(battleFocus,  text=str(battle), padx=100)
+    battleFocusLabel = tk.Label(battleFocus,  text=f"{str(battle)}", padx=100)
+    battleRoundLabel = tk.Label(battleFocus, text=f"Round {battle.round}", pady=10)
+    # display score element
+    scoreString = f"Scores: {" -- ".join([f'{battle.competitors[c].name}: {battle.scores[c]}' for c in range(len(battle.competitors))])}"
+    battleScoreLabel = tk.Label(battleFocus, text=scoreString)
+
+    # time input
+    timeInputLabel = tk.Label(battleFocus, text=f"Input time for {battle.getCurrentCompetitor().name}:")
+    timeInput = tk.Entry(battleFocus)
+
+    # submit button, disable if there is a winner
+    submitButton = tk.Button(battleFocus, text='Submit time', width=25, state={True: tk.DISABLED, False: tk.NORMAL}[battle.hasWinner()], command=submitTime)
 
     # pack elements
     battleFocusLabel.pack()
+    battleRoundLabel.pack()
+    battleScoreLabel.pack()
+    timeInputLabel.pack()
+    timeInput.pack()
+    submitButton.pack()
 
     
     return battleFocus
 
-
-#TODO
 
 # startup code
 homeScreen().pack()
