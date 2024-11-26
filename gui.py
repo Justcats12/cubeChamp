@@ -22,12 +22,15 @@ def homeScreen():
     def goNewEvent():
         home.destroy()
         newEventScreen().pack()
+    def goLoadEvent():
+        home.destroy()
+        loadFromFileScreen().pack()
 
     # initialize elements
     homeLabel = tk.Label(home,  text="Home", padx=100)
 
     newEventButton = tk.Button(home, text="New event", width=25, command=goNewEvent)
-    loadEventButton = tk.Button(home, text="Load event from file", width=25)
+    loadEventButton = tk.Button(home, text="Load event from file", width=25, command=goLoadEvent)
 
     quitButton = tk.Button(home, text='Quit', width=25, command=root.destroy)
 
@@ -68,6 +71,36 @@ def newEventScreen():
     submitButton.pack()
     
     return newEvent
+
+#
+# Load from file screen
+#
+def loadFromFileScreen():
+    loadEvent = tk.Frame(root)
+
+    # moving functions
+    def submit():
+        fileName = nameEntry.get()
+        loadEvent.destroy()
+        eventHomeScreen(event=Event(file=fileName)).pack()
+        
+
+    # initialize elements
+    newEventLabel = tk.Label(loadEvent,  text="Load event from file", padx=100)
+    enterNameLabel = tk.Label(loadEvent, text="File path:")
+
+    nameEntry = tk.Entry(loadEvent)
+
+    submitButton = tk.Button(loadEvent, text="Submit", width=25, command=submit)
+
+    # pack elements
+    newEventLabel.pack()
+    enterNameLabel.pack()
+    nameEntry.pack()
+    submitButton.pack()
+    
+    return loadEvent
+
 
 #
 # enterplayername
@@ -119,6 +152,10 @@ def competitorEntryScreen(eventName : str, pCompetitors = []):
     scrollbar.config(command=competitorList.yview)
 
     return competitorEntry
+#
+# Event homescreen
+#
+
 
 def eventHomeScreen(event : Event):
     eventHome = tk.Frame(root)
@@ -140,7 +177,7 @@ def eventHomeScreen(event : Event):
 
     for i in range(len(event.competitors)):
         cCompetitor = event.competitors[i]
-        competitorList.insert(tk.END, f'{i}) {cCompetitor.name}: {cCompetitor.wins} wins ({cCompetitor.getMean()})')
+        competitorList.insert(tk.END, f'{i}) {cCompetitor.name}: {cCompetitor.wins} wins ({round(cCompetitor.getMean(), 2)})')
 
     # buttons
     startBattlesButton = tk.Button(eventHome, text='Start battles', width=25)
@@ -159,7 +196,7 @@ def eventHomeScreen(event : Event):
 
     startBattlesButton.pack()
     saveandQuitButton.pack()
-    
+
     return eventHome
 
 
