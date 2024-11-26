@@ -168,6 +168,12 @@ def eventHomeScreen(event : Event):
         eventHome.destroy()
         e.startRound()
         battleSummaryScreen(e).pack()
+    
+    def saveAndQuit():
+        fileName = enterFileName.get()
+        event.saveToFile(fileName)
+        eventHome.destroy()
+        homeScreen().pack()
 
     # initialize elements
     eventHomeLabel = tk.Label(eventHome,  text=f"Event {event.name}", padx=100)
@@ -187,7 +193,12 @@ def eventHomeScreen(event : Event):
     # buttons
     startBattlesButton = tk.Button(eventHome, text='Start battles', width=25, command=startBattles)
 
-    saveandQuitButton = tk.Button(eventHome, text='Save and quit', width=25) # TODO: add save function & screen
+    fileNameLabel = tk.Label(eventHome, text="Input file name")
+    enterFileName = tk.Entry(eventHome)
+    enterFileName.insert(0, f"events/{event.name}.event")
+    saveandQuitButton = tk.Button(eventHome, text='Save and go home', width=25, command=saveAndQuit)
+
+    quitAndDiscardButton = tk.Button(eventHome, text='Quit and discard', width=25, command=root.destroy)
 
     # pack elements
     eventHomeLabel.pack()
@@ -200,7 +211,11 @@ def eventHomeScreen(event : Event):
     listFrame.pack()
 
     startBattlesButton.pack()
+
+    fileNameLabel.pack()
+    enterFileName.pack()
     saveandQuitButton.pack()
+    quitAndDiscardButton.pack()
 
     return eventHome
 
@@ -244,7 +259,7 @@ def battleSummaryScreen(event : Event):
     
 
     # combo box for selecting battles
-    combo_box = ttk.Combobox(battleSummary, values=battleStrings)
+    combo_box = ttk.Combobox(battleSummary, values=battleStrings, width=200)
     combo_box.set(battleStrings[0])
 
     # button for ending the battles
