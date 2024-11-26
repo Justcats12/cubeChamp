@@ -4,6 +4,7 @@
 # Author: justcats12
 
 import tkinter as tk
+from tkinter import ttk
 from classes import Event, Battle, Competitor, DNF
 
 # main window
@@ -162,7 +163,11 @@ def eventHomeScreen(event : Event):
     # sort competitors
     event.sortCompetitorsByRank()
     # moving functions
-
+    def startBattles():
+        e = event
+        eventHome.destroy()
+        e.startRound()
+        battleSummaryScreen(e).pack()
 
     # initialize elements
     eventHomeLabel = tk.Label(eventHome,  text=f"Event {event.name}", padx=100)
@@ -180,7 +185,7 @@ def eventHomeScreen(event : Event):
         competitorList.insert(tk.END, f'{i}) {cCompetitor.name}: {cCompetitor.wins} wins ({round(cCompetitor.getMean(), 2)})')
 
     # buttons
-    startBattlesButton = tk.Button(eventHome, text='Start battles', width=25)
+    startBattlesButton = tk.Button(eventHome, text='Start battles', width=25, command=startBattles)
 
     saveandQuitButton = tk.Button(eventHome, text='Save and quit', width=25)
 
@@ -199,6 +204,72 @@ def eventHomeScreen(event : Event):
 
     return eventHome
 
+#
+# Battles summary screen
+#
+
+def battleSummaryScreen(event : Event):
+    battleSummary = tk.Frame(root)
+    
+    # get battling lists
+    battles = event.battles
+    battleStrings = [str(b) for b in battles]
+    
+    # battle selecting 
+    selectedBattle = [battleFocusScreen(battles[0], battleSummary)]
+    
+    def on_select(event):
+        selected_item = combo_box.get()
+        index = battleStrings.index(selected_item)
+        b = battles[index]
+
+        selectedBattle[0].destroy()
+        selectedBattle.pop()
+        selectedBattle.append(battleFocusScreen(b, battleSummary))
+        selectedBattle[0].pack()
+        
+
+        
+    
+    # initialize elements
+    battleSummaryLabel = tk.Label(battleSummary,  text=f"Event {event.name} battles", padx=100)
+    
+
+    # combo box for selecting battles
+    combo_box = ttk.Combobox(battleSummary, values=battleStrings)
+    combo_box.set(battleStrings[0])
+    
+
+
+    # pack elements
+    battleSummaryLabel.pack()
+    combo_box.pack()
+    selectedBattle[0].pack()
+
+    # config
+    combo_box.bind("<<ComboboxSelected>>", on_select)
+
+
+    return battleSummary
+
+
+#
+# Battle focus screen
+#
+def battleFocusScreen(battle : Battle, root=root):
+    battleFocus = tk.Frame(root)
+
+    # initialize elements
+    battleFocusLabel = tk.Label(battleFocus,  text=str(battle), padx=100)
+
+    # pack elements
+    battleFocusLabel.pack()
+
+    
+    return battleFocus
+
+
+#TODO
 
 # startup code
 homeScreen().pack()

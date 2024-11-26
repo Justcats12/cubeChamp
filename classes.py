@@ -254,9 +254,9 @@ class Event():
                 solves = []
 
             if splits[2] != "":
-                compCompeted = splits[2].split(" ")
+                compCompeted = set(splits[2].split(" "))
             else:
-                compCompeted = []
+                compCompeted = set()
             
             wins = int(splits[3])
             # add them to the list
