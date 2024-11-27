@@ -7,11 +7,16 @@ import tkinter as tk
 from tkinter import ttk
 from classes import Event, Battle, Competitor, DNF
 
+
+
+# constants
+BUTTON_WIDTH = 25
+SCREEN_GEOMETRY = "600x400"
+
 # main window
 root = tk.Tk()
 root.title('cubeChamp')
-root.geometry("600x400")
-
+root.geometry(SCREEN_GEOMETRY)
 
 #
 # Homescreen
@@ -30,10 +35,10 @@ def homeScreen():
     # initialize elements
     homeLabel = tk.Label(home,  text="Home", padx=100)
 
-    newEventButton = tk.Button(home, text="New event", width=25, command=goNewEvent)
-    loadEventButton = tk.Button(home, text="Load event from file", width=25, command=goLoadEvent)
+    newEventButton = tk.Button(home, text="New event", width=BUTTON_WIDTH, command=goNewEvent)
+    loadEventButton = tk.Button(home, text="Load event from file", width=BUTTON_WIDTH, command=goLoadEvent)
 
-    quitButton = tk.Button(home, text='Quit', width=25, command=root.destroy)
+    quitButton = tk.Button(home, text='Quit', width=BUTTON_WIDTH, command=root.destroy)
 
     # pack elements
     homeLabel.pack()
@@ -55,6 +60,10 @@ def newEventScreen():
         eventName = nameEntry.get()
         newEvent.destroy()
         competitorEntryScreen(eventName).pack()
+    
+    def goBack():
+        newEvent.destroy()
+        homeScreen().pack()
         
 
     # initialize elements
@@ -63,13 +72,15 @@ def newEventScreen():
 
     nameEntry = tk.Entry(newEvent)
 
-    submitButton = tk.Button(newEvent, text="Submit", width=25, command=goToCompetitorEntry)
+    submitButton = tk.Button(newEvent, text="Submit", width=BUTTON_WIDTH, command=goToCompetitorEntry)
+    backButton = tk.Button(newEvent, text="Back", width=BUTTON_WIDTH, command=goBack)
 
     # pack elements
     newEventLabel.pack()
     enterNameLabel.pack()
     nameEntry.pack()
     submitButton.pack()
+    backButton.pack()
     
     return newEvent
 
@@ -84,7 +95,10 @@ def loadFromFileScreen():
         fileName = nameEntry.get()
         loadEvent.destroy()
         eventHomeScreen(event=Event(file=fileName)).pack()
-        
+    
+    def goBack():
+        loadEvent.destroy()
+        homeScreen().pack()
 
     # initialize elements
     newEventLabel = tk.Label(loadEvent,  text="Load event from file", padx=100)
@@ -92,13 +106,16 @@ def loadFromFileScreen():
 
     nameEntry = tk.Entry(loadEvent)
 
-    submitButton = tk.Button(loadEvent, text="Submit", width=25, command=submit)
+    submitButton = tk.Button(loadEvent, text="Submit", width=BUTTON_WIDTH, command=submit)
+
+    backButton = tk.Button(loadEvent, text="Back", width=BUTTON_WIDTH, command=goBack)
 
     # pack elements
     newEventLabel.pack()
     enterNameLabel.pack()
     nameEntry.pack()
     submitButton.pack()
+    backButton.pack()
     
     return loadEvent
 
@@ -121,14 +138,18 @@ def competitorEntryScreen(eventName : str, pCompetitors = []):
         competitorEntry.destroy()
         eventHomeScreen(e).pack()
 
+    def goHome():
+        competitorEntry.destroy()
+        homeScreen().pack()
+
     # initialize elements
     addCompetitorLabel = tk.Label(competitorEntry,  text=f"Add competitor {len(pCompetitors)+1} for {eventName}", padx=100)
     enterNameLabel = tk.Label(competitorEntry, text="Competitor name:")
 
     nameEntry = tk.Entry(competitorEntry)
 
-    addCompetitorButton = tk.Button(competitorEntry, text="Add competitor", width=25, command=addCompetitor)
-    doneButton = tk.Button(competitorEntry, text="Done", width=25, command=startEvent)
+    addCompetitorButton = tk.Button(competitorEntry, text="Add competitor", width=BUTTON_WIDTH, command=addCompetitor)
+    doneButton = tk.Button(competitorEntry, text="Done", width=BUTTON_WIDTH, command=startEvent)
 
     listFrame = tk.Frame(competitorEntry)
     scrollbar = tk.Scrollbar(listFrame)
@@ -138,7 +159,7 @@ def competitorEntryScreen(eventName : str, pCompetitors = []):
     for competitor in pCompetitors:
         competitorList.insert(tk.END, competitor)
         
-    
+    cancelButton = tk.Button(competitorEntry, text="Cancel", width=BUTTON_WIDTH, command=goHome)
 
     # pack elements
     addCompetitorLabel.pack()
@@ -151,6 +172,7 @@ def competitorEntryScreen(eventName : str, pCompetitors = []):
     listFrame.pack()
     # config scrollbar
     scrollbar.config(command=competitorList.yview)
+    cancelButton.pack()
 
     return competitorEntry
 #
@@ -191,14 +213,14 @@ def eventHomeScreen(event : Event):
         competitorList.insert(tk.END, f'{i+1}) {cCompetitor.name}: {cCompetitor.wins} wins ({round(cCompetitor.getMean(), 2)})')
 
     # buttons
-    startBattlesButton = tk.Button(eventHome, text='Start battles', width=25, command=startBattles)
+    startBattlesButton = tk.Button(eventHome, text='Start battles', width=BUTTON_WIDTH, command=startBattles)
 
     fileNameLabel = tk.Label(eventHome, text="Input file name")
     enterFileName = tk.Entry(eventHome)
     enterFileName.insert(0, f"events/{event.name}.event")
-    saveandQuitButton = tk.Button(eventHome, text='Save and go home', width=25, command=saveAndQuit)
+    saveandQuitButton = tk.Button(eventHome, text='Save and go home', width=BUTTON_WIDTH, command=saveAndQuit)
 
-    homeAndDiscardButton = tk.Button(eventHome, text='Go home and discard', width=25, command= lambda : eventHome.destroy() or homeScreen().pack())
+    homeAndDiscardButton = tk.Button(eventHome, text='Go home and discard', width=BUTTON_WIDTH, command= lambda : eventHome.destroy() or homeScreen().pack())
 
     # pack elements
     eventHomeLabel.pack()
@@ -263,7 +285,7 @@ def battleSummaryScreen(event : Event):
     combo_box.set(battleStrings[0])
 
     # button for ending the battles
-    endButton = tk.Button(battleSummary, text='End battles', width=25, state=tk.DISABLED, pady=10, command=endBattles) 
+    endButton = tk.Button(battleSummary, text='End battles', width=BUTTON_WIDTH, state=tk.DISABLED, pady=10, command=endBattles) 
 
 
     # pack elements
@@ -316,7 +338,7 @@ def battleFocusScreen(battle : Battle, root=root, updateFunction = None):
     timeInput = tk.Entry(battleFocus)
 
     # submit button, disable if there is a winner
-    submitButton = tk.Button(battleFocus, text='Submit time', width=25, state={True: tk.DISABLED, False: tk.NORMAL}[battle.hasWinner()], command=submitTime)
+    submitButton = tk.Button(battleFocus, text='Submit time', width=BUTTON_WIDTH, state={True: tk.DISABLED, False: tk.NORMAL}[battle.hasWinner()], command=submitTime)
 
     # previous times:
     previousTimesString = f"Previous: {', '.join([f'{battle.competitors[i].name}: {battle.solvesThisRound[i]}' for i in range(len(battle.solvesThisRound))])}"

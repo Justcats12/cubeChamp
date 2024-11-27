@@ -1,6 +1,6 @@
 # cubeChamp
 
-VERSION: ALPHA 1.0
+VERSION: ALPHA 1.0.1
 
 (THIS IS A WORK IN PROGRES, it remains unfinished)
 

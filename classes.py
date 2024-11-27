@@ -14,13 +14,13 @@ DNF = -1
 ####################
 
 class Competitor():
-    def __init__(self, name : str, solves = set(), competed = set(), wins = 0):
+    def __init__(self, name : str, solves = [], competed = [], wins = 0):
         # initate class with name, no solves and no wins
         self.name : str = name
-        self.solves : set = solves.copy()
+        self.solves : list = solves.copy()
         self.wins : int = wins
         # set to check who competitor already competed with
-        self.competed : set = competed.copy()
+        self.competed : list = competed.copy()
     
     def __str__(self):
         # tostring
@@ -47,9 +47,9 @@ class Competitor():
         # replace the DNFs with the worst time of the solves
         for solve in self.solves:
             if solve == DNF:
-                meanList.add(worstTime)
+                meanList.append(worstTime)
             else:
-                meanList.add(solve)
+                meanList.append(solve)
         # return the mean of meanList
         return sum(meanList)/len(meanList)
 
@@ -71,10 +71,10 @@ class Competitor():
         """Add a solve to the competitor's solves"""
         # check if solve is DNF
         if time == DNF:
-            self.solves.add(DNF)
+            self.solves.append(DNF)
         # add time if positive
         elif time >= 0:
-            self.solves.add(time)
+            self.solves.append(time)
         # throw exception if negative
         else:
             raise Exception("Time must either be -1 for DNF or a positive number")
@@ -96,12 +96,12 @@ class Competitor():
             # checks if the competitor itself is in the list
             if c.name != self.name:
                 #print(self.name, c.name)
-                self.competed.add(c.name)
+                self.competed.append(c.name)
 
 
     
 # LACK OF COMPETITOR
-LOC = Competitor("No competitor")
+LOC = Competitor("No competitor", solves=[DNF], wins=-99)
 """
 Lack of competitor (LOC) is an artificial competitor added when there is an uneven amount of competitors. \n
 They do a DNF every turn automatically.
@@ -249,14 +249,14 @@ class Event():
             compName = splits[0]
                 #check if there are any
             if splits[1] != "":
-                solves = set([float(i) for i in splits[1].split(" ")])
+                solves = [float(i) for i in splits[1].split(" ")]
             else:
-                solves = set()
+                solves = []
 
             if splits[2] != "":
-                compCompeted = set(splits[2].split("%%"))
+                compCompeted = splits[2].split("%%")
             else:
-                compCompeted = set()
+                compCompeted = []
             
             wins = int(splits[3])
             # add them to the list
