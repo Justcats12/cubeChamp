@@ -41,7 +41,7 @@ class Competitor():
         """Get the mean of the solves of the cuber"""
         if len(self.solves) == 0:
             return DNF
-        meanList = set()
+        meanList = []
         # get the worst time of the solves
         worstTime = max(self.solves)
         # replace the DNFs with the worst time of the solves

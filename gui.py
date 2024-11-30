@@ -187,8 +187,9 @@ def eventHomeScreen(event : Event):
     # moving functions
     def startBattles():
         e = event
+        p = int(pointsEntry.get())
         eventHome.destroy()
-        e.startRound()
+        e.startRound(scoreToWin=p)
         battleSummaryScreen(e).pack()
     
     def saveAndQuit():
@@ -212,6 +213,11 @@ def eventHomeScreen(event : Event):
         cCompetitor = event.competitors[i]
         competitorList.insert(tk.END, f'{i+1}) {cCompetitor.name}: {cCompetitor.wins} wins ({round(cCompetitor.getMean(), 2)})')
 
+    # points to win
+    pointsLabel = tk.Label(eventHome, text="Insert points to win")
+    pointsEntry = tk.Entry(eventHome)
+    pointsEntry.insert(0, "3")
+
     # buttons
     startBattlesButton = tk.Button(eventHome, text='Start battles', width=BUTTON_WIDTH, command=startBattles)
 
@@ -231,6 +237,9 @@ def eventHomeScreen(event : Event):
     competitorList.pack(side=tk.LEFT, fill=tk.BOTH)
     scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
     listFrame.pack()
+
+    pointsLabel.pack()
+    pointsEntry.pack()
 
     startBattlesButton.pack()
 
