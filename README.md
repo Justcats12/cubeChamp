@@ -1,6 +1,6 @@
 # cubeChamp
 
-VERSION: ALPHA 1.0.1
+VERSION: ALPHA 1.1
 
 (THIS IS A WORK IN PROGRES, it remains unfinished)
 
@@ -14,6 +14,10 @@ It can also be used for 1v1v1s or 1v1v1v1s and so on, though the matchmaker does
 cubeChamp does not have an internal scramble generator, to generate scramlbes for best of 5 or best of 3 it is recommended to use tNoodle.
 
 The gui and cui currently only support best of 5, 1v1 battles.
+
+### restrictions
+
+The gui can only understand times in the format XXXX.XX and not XX:XX:XX.XX
 
 ## File descriptions
 1. **classes.py**: this is the workings of the system. It consists of 3 main classes
