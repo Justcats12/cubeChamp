@@ -4,6 +4,7 @@
 # Author: justcats12
 
 import tkinter as tk
+from tkinter import messagebox
 from tkinter import ttk
 from classes import Event, Battle, Competitor, DNF
 
@@ -11,12 +12,18 @@ from classes import Event, Battle, Competitor, DNF
 
 # constants
 BUTTON_WIDTH = 25
-SCREEN_GEOMETRY = "600x400"
+SCREEN_GEOMETRY = "600x600"
 
 # main window
 root = tk.Tk()
 root.title('cubeChamp')
 root.geometry(SCREEN_GEOMETRY)
+
+#
+# Error message
+#
+def showError(title : str = "Error", description : str = "Unknown error occured"):
+   messagebox.showerror(title, "Error: " + description)
 
 #
 # Homescreen
@@ -58,8 +65,11 @@ def newEventScreen():
     # moving functions
     def goToCompetitorEntry():
         eventName = nameEntry.get()
-        newEvent.destroy()
-        competitorEntryScreen(eventName).pack()
+        if eventName == None or eventName == "":
+            showError("No event name", "Please input a name for the event")
+        else:
+            newEvent.destroy()
+            competitorEntryScreen(eventName).pack()
     
     def goBack():
         newEvent.destroy()
@@ -93,8 +103,14 @@ def loadFromFileScreen():
     # moving functions
     def submit():
         fileName = nameEntry.get()
-        loadEvent.destroy()
-        eventHomeScreen(event=Event(file=fileName)).pack()
+        
+        try:
+            eventHomeScreen(event=Event(file=fileName)).pack()
+            loadEvent.destroy()
+        except:
+            showError("File not found", "Could not find the file to the given path")
+        
+        
     
     def goBack():
         loadEvent.destroy()
@@ -127,16 +143,25 @@ def competitorEntryScreen(eventName : str, pCompetitors = []):
     competitorEntry = tk.Frame(root)
     # moving functions
     def addCompetitor():
+        compName = nameEntry.get()
+        if compName == None or len(compName) < 2:
+            showError("Invalid competitor name", "Please input a name longer of 2 characters or longer")
+        else:
+            competitors = pCompetitors + [compName]
+            competitorEntry.destroy()
+            competitorEntryScreen(eventName, competitors).pack()
         
-        competitors = pCompetitors + [nameEntry.get()]
-        competitorEntry.destroy()
-        competitorEntryScreen(eventName, competitors).pack()
-    
     def startEvent():
-        competitors =  [Competitor(n) for n in pCompetitors]
-        e = Event(eventName, competitors=competitors)
-        competitorEntry.destroy()
-        eventHomeScreen(e).pack()
+        try:
+            competitors =  [Competitor(n) for n in pCompetitors]
+            if len(competitors) < 2:
+                showError("Not enough competitors", "There have to be at least 2 competitors")
+            else:
+                e = Event(eventName, competitors=competitors)
+                competitorEntry.destroy()
+                eventHomeScreen(e).pack()
+        except:
+            showError("Something went wrong", "Cloud not start event, please restart and try again")
 
     def goHome():
         competitorEntry.destroy()
@@ -187,16 +212,25 @@ def eventHomeScreen(event : Event):
     # moving functions
     def startBattles():
         e = event
-        p = int(pointsEntry.get())
-        eventHome.destroy()
-        e.startRound(scoreToWin=p)
-        battleSummaryScreen(e).pack()
+        try:
+            p = int(pointsEntry.get())
+            eventHome.destroy()
+            e.startRound(scoreToWin=p)
+            battleSummaryScreen(e).pack()
+        except:
+            showError("Invalid points to win", "Please input a number in the points to win entry")
     
     def saveAndQuit():
         fileName = enterFileName.get()
-        event.saveToFile(fileName)
-        eventHome.destroy()
-        homeScreen().pack()
+        if fileName == None or fileName == "":
+            showError("Invalid filename", "Please input a filename")
+        else:
+            try:
+                event.saveToFile(fileName)
+                eventHome.destroy()
+                homeScreen().pack()
+            except:
+                showError("Could not save", "Could not save file, please double check the path")
 
     # initialize elements
     eventHomeLabel = tk.Label(eventHome,  text=f"Event {event.name}", padx=100)
@@ -322,10 +356,13 @@ def battleFocusScreen(battle : Battle, root=root, updateFunction = None):
         userInput = timeInput.get()
         if userInput.upper() == "DNF":
             userInput = DNF
-        userInput = float(userInput)
+        try:
+            userInput = float(userInput)
 
-        battle.playTurn(userInput)
-        updateFunction()
+            battle.playTurn(userInput)
+            updateFunction()
+        except:
+            showError("Invalid time", "Please input a float")
     # if there is a winner
     if battle.hasWinner():
         battleWonLabel = tk.Label(battleFocus, text=f"{battle.getWinner().name} won this battle")
